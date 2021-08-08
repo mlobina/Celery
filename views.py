@@ -9,6 +9,9 @@ import datetime
 from functools import wraps
 from models import User, Advertisement
 
+from celery.result import AsyncResult
+from celery_task import celery, send_email
+
 
 @app.route('/')
 def index():
@@ -204,3 +207,19 @@ def delete_advertisement(current_user, advertisement_id):
         return jsonify({'message': 'The advertisement has been deleted!'})
     else:
         return jsonify({'message': 'Forbidden'}), 403
+
+
+# methods for sending emails
+@app.route('/email/<string:task_id>', methods=['GET'])
+def get(task_id):
+    task = AsyncResult(task_id, app=celery)
+    return jsonify({'status': task.status,
+                    'result': task.result})
+
+
+@app.route('/email', methods=['POST'])
+def post():
+    task = send_email.delay()
+    return jsonify(
+        {'task_id': task.id}
+    )

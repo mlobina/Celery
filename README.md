@@ -2,48 +2,31 @@
 
 
 Проект REST API (backend) для сайта объявлений.
-В качестве фреймворка использован Flask .
+В качестве фреймворка использован Flask.
 
 ## Документация по проекту
 
 Для запуска проекта необходимо:
 
-Клонировать репозиторий:
+Переопределить переменные окружения через параметр -e в строке запуска контейнера:
+DB_USER  
+DB_PASSWORD  
+DB_HOST   
+DB_PORT   
+DB_NAME   
+secret_key
 
-```
-git clone https://github.com/mlobina/flask_api_advertisement.git
-cd flask_api_advertisement
-```
-Создать и активировать виртуальное окружение:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
+Собрать image при помощи команды:
 
-Установить зависимости:
+`docker build -t flask-app .`
 
-`pip install -r requirements.txt`
+Запустить контейнер при помощи команды:
 
-Создать файл config.py
-Cоздать базу в postgres, указать настройки подключения к БД в файле config.py по образцу:
+`docker run --network host --rm --name flask-app -d  flask-app:latest`
 
-class Configuration(object):
-    DEBUG = False
-   
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    POSTGRE_URI = 'postgresql+psycopg2://postgres:postgres@localhost:5432/adv_db'
-
-и выполнить миграцию в консоли:  
-import models
-from app import db
-db.create_all()
-
-Выполнить команду в терминале:
-
-`python run`
 
 Перейти на соответствующий эндпоинт в соответствии с описанием API-сервиса:
 
-`http://127.0.0.1:8082/login`
-`http://127.0.0.1:8082/api/v1/user`
-`http://127.0.0.1:8082/api/v1/advertisement`
+`http://127.0.0.1:5000/login`  
+`http://127.0.0.1:5000/api/v1/user`  
+`http://127.0.0.1:5000/api/v1/advertisement`
